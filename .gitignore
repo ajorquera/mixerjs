@@ -1,0 +1,9 @@
+#folders
+.idea/
+node_modules/
+bower_components/
+
+#extensions
+*.log
+*.orig
+*.min.js
