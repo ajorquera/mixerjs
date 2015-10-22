@@ -1,9 +1,9 @@
 ![Logo]
-(https://raw.githubusercontent.com/jortechve/mixerjs/develop/imgs/logo.png)
+(https://raw.githubusercontent.com/ajorquera/mixerjs/develop/imgs/logo.png)
 
-Web server that **serves multiple JavaScript or CSS libraries in a single http request.** 
+Web server that **serves multiple JavaScript libraries in a single http request.** 
 During web development, a project will need the use of different kind of libraries. It can be 
-frameworks, plugins or tracking scripts. Some websites load these dependecies one http request at a time, this means 
+frameworks, plugins or tracking scripts. Some websites load these dependencies one http request at a time, this means 
 as dependencies grow it creates an overhead on the performance of the website. To handle this, there are some continuous
 integration tools for unifying and minifying files. But, theses tools takes time and knowledge to make proper use of 
 them. Hopefully MixerJS will provide a easy solution for it. 
@@ -18,7 +18,7 @@ The basic use will be:
 
 * ##Installation
     
-    To run mixerJS, you will need to install nodejs. Go to [their website](https://nodejs.org/download/) 
+    To run mixerJS, you will need to install nodejs. Go to [their website](https://nodejs.org) 
     for further instructions. Once installed, you can run the following command in the terminal:
     
     ```node mixer.js```
@@ -31,7 +31,6 @@ The basic use will be:
     MixerJs will have by default some basic configuration.
     
     **config.json**
-    
     
     ```JSON
     {
@@ -46,14 +45,14 @@ The basic use will be:
      
     + ####Minifying
      
-     Minifying the libraries can be optional. Adding .min.js or .min.css to the end of the filename will minify it 
+     Minifying the libraries can be optional. Adding .min.js to the end of the filename will minify it 
      automatically.
      
-    + ####Custom builds
+    + ####Custom builds (TODO)
      
      Some libraries allows to create custom builds in order to just take what you need. MixerJS can accept a json 
      structure through the query for that specific library. More information in 
-     [builds](https://github.com/jortechve/mixerjs/customBuilds)   
+     [builds](https://github.com/ajorquera/mixerjs/builds)   
         
     + ####Cache and nginx
      
@@ -61,9 +60,32 @@ The basic use will be:
      or disk storage. The first attempt to retrieve the file will go through nginx and it will be proxied to mixerJS. 
      Subsequent attempts will be serve by nginx's cache. 
      
-* ##Testing TODO
+     + ####Library Fallback
+          
+      Some libraries doesn't follow the correct pattern when setting up their bower.json, as a consequence mixerjs has 
+      problems to find the corresponding library file. `libraryFallback.json` is a json file that solves this issue, 
+      setting the correct properties for each library. 
+      
+      ```JSON
+      {
+          "jquery-easing-original": {
+              "default": {
+                  "path":"jquery.easing.js"
+              },
+              
+              "1.3.2": {
+                  "path":"jquery.easing.js"
+              }
+          }
+      }
+      ```
      
-     MixerJS have some test you can run by using mocha. To run the tests, go to the terminal and do:
+* ##Testing
+     
+     MixerJS have some test you can run by using [mocha](http://mochajs.org/). To run the tests, go to the terminal 
+     and do:
+     
+     `mocha tests`
      
 * ##Demo
      We have set up a small server using the domain name `jort.ch`, so you can check it online. Some uses are:
@@ -73,8 +95,3 @@ The basic use will be:
      + http://jort.ch/mixer.js?jquery
      + http://jort.ch/mixer.min,js?lodash=2.5&jquery
      + http://jort.ch/compile.js?lodash=%7B%22category%22%3A%22array%22%2C%22plus%22%3A%5B%22random%22%2C%22template%22%5D%7D
-     
-    **CSS**
-    
-     + http://jort.ch/mixer.css?boostrap
-     + http://jort.ch/mixer.css?jquery&foundation

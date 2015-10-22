@@ -2,7 +2,7 @@ var libraryFallback,
     helpers,
     fs;
 
-libraryFallback = require('../libraryConsistency.json');
+libraryFallback = require('../libraryFallback.json');
 helpers         = require('./helpers');
 fs              = require('fs-extra');
 

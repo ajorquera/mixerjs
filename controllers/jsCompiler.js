@@ -1,16 +1,17 @@
 var bowerUtils,
     jsCompiler,
-    UglifyJS,
+    shelljs,
     url,
+    jsp,
+    pro,
     q;
 
 bowerUtils = require('../models/bowerUtils');
 url        = require('url');
 q          = require('q');
-shell      = require('shelljs');
-UglifyJS   = require("uglify-js");
-var jsp = require("uglify-js").parser;
-var pro = require("uglify-js").uglify;
+shelljs    = require('shelljs');
+jsp        = require("uglify-js").parser;
+pro        = require("uglify-js").uglify;
 
 jsCompiler = function(req, res, next) {
     url = url.parse(req.url, true);
@@ -65,7 +66,7 @@ function _createFile(libraries) {
             filesToConcatenate.push(filePath);
         });
 
-        deferred.resolve(shell.cat(filesToConcatenate));
+        deferred.resolve(shelljs.cat(filesToConcatenate));
 
     });
 
@@ -112,8 +113,7 @@ function _minifyString(str) {
     str = jsp.parse(str);
     str = pro.ast_squeeze(str);
 
-
-    return pro.gen_code(str);;
+    return pro.gen_code(str);
 }
 
 module.exports = jsCompiler;

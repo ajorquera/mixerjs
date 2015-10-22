@@ -8,11 +8,9 @@ config       = require('./config.json');
 jsCompiler   = require('./controllers/jsCompiler');
 errorHandler = require('./controllers/errorHandler');
 
-app.set('view engine', 'jade');
-app.set('views', './');
-
 app.get('/', function(req, res) {
-    res.render('welcome', config);
+    res.contentType('application/json');
+    res.sendFile(__dirname + '/welcome.json');
 });
 
 app.get('/*.js', function(req, res) {
@@ -29,7 +27,6 @@ if(require.main === module) {
         console.log('mixerjs listening in port ' + config.port);
     })
 }
-
 
 module.exports = app;
 

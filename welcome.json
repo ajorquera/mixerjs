@@ -1,0 +1,12 @@
+{
+    "message"  : "Web server that serves multiple JavaScript or CSS libraries in a single http request. ",
+    "examples" : [
+        "/mixer.js?jquery",
+        "/mixer.js?bootstrap",
+        "/mixer.js?moment",
+        "/mixer.js?foundation",
+        "/mixer.js?angular=1.0.0",
+        "/example.js?react=0.13",
+        "/whatever.js?jquery=2.0&toastr"
+    ]
+}
