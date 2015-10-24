@@ -21,7 +21,10 @@ The basic use will be:
     To run mixerJS, you will need to install nodejs. Go to [their website](https://nodejs.org) 
     for further instructions. Once installed, you can run the following command in the terminal:
     
-    ```node mixer.js```
+    ```
+    npm install
+    node mixer.js
+    ```
 
 * ##How It Works
     Mixerjs uses [bower](http://bower.io/) for fetching the necessary libraries and does some underneath logic to handle 
@@ -60,11 +63,11 @@ The basic use will be:
      or disk storage. The first attempt to retrieve the file will go through nginx and it will be proxied to mixerJS. 
      Subsequent attempts will be serve by nginx's cache. 
      
-     + ####Library Fallback
+    + ####Library Fallback
           
       Some libraries doesn't follow the correct pattern when setting up their bower.json, as a consequence mixerjs has 
       problems to find the corresponding library file. `libraryFallback.json` is a json file that solves this issue, 
-      setting the correct properties for each library. 
+      setting the correct path for each library. 
       
       ```JSON
       {
@@ -93,5 +96,6 @@ The basic use will be:
     **JS**
     
      + http://jort.ch/mixer.js?jquery
-     + http://jort.ch/mixer.min,js?lodash=2.5&jquery
-     + http://jort.ch/compile.js?lodash=%7B%22category%22%3A%22array%22%2C%22plus%22%3A%5B%22random%22%2C%22template%22%5D%7D
+     + http://jort.ch/mixer.min.js?lodash=2.4.1&jquery
+     + http://jort.ch/compile.js?bootstrap&foundation&angular&angular-ui-router
+     + http://jort.ch/compile.min.js?react=0.14.0&jquery-easing-original
