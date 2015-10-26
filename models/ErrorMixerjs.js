@@ -75,7 +75,7 @@ ErrorMixerjs._errors = {
     UNKNOWN: {
         name           : 'UNKNOWN',
         httpCodeStatus : 500,
-        msgTemplate    : 'An unknown error occurred, please contact support@virtualitour.co.uk'
+        msgTemplate    : 'An unknown error occurred, please create an issue in https://github.com/ajorquera/mixerjs/issues'
     }
 };
 

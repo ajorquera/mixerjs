@@ -161,7 +161,7 @@ _downloadWithBower.errorHandler = function(deferred, err) {
         errorObject = {name: 'CONFLICT', message: err.message};
 
     } else if (err.code === 'ENORESTARGET') {
-        errorObject = {name: 'ENORESTARGET'};
+        errorObject = {name: 'WRONG_VERSION', params : {library: err.data.endpoint.source, details: err.details}};
 
     } else if(err) {
         errorObject = {name: 'UNKNOWN'};

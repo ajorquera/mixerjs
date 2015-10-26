@@ -55,7 +55,7 @@ BowerLibrary = function() {
  * @returns {string}
  */
 BowerLibrary.prototype.toString = function() {
-    return (this.alias || this.name) + '#' + this.version;
+    return (this.alias || this.name) + (this.version ? '#' + this.version : '');
 };
 
 /**
@@ -101,7 +101,15 @@ BowerLibrary.prototype.getDirPath = function() {
  * @param {string} folderName - New folder name.
  */
 BowerLibrary.prototype.renameBowerLibrary = function(folderName) {
-    fs.copySync(this.getDirPath(), this.LIB_DIRECTORY + '/' + folderName);
+    var oldPath,
+        newPath;
+
+    oldPath = this.getDirPath();
+    newPath = this.LIB_DIRECTORY + '/' + folderName;
+
+    if(oldPath === newPath) return this;
+
+    fs.copySync(oldPath, newPath);
 
     _deleteDir(this.getDirPath());
 

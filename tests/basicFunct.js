@@ -45,6 +45,17 @@ describe('mixerjs basic functionality', function() {
             });
         });
 
+        it('should get /mixer.js?jquery&tinynav', function (done) {
+            testUtils.createEnv('/mixer.js?jquery&tinynav', function () {
+                return window.jQuery;
+            }, function (jQuery) {
+                expect(jQuery.fn.jquery).to.equal('2.1.4');
+                expect(jQuery.fn.tinyNav).to.exist;
+
+                done();
+            });
+        });
+
         it('should get /mixer.js?foundation', function (done) {
             testUtils.createEnv('/mixer.js?foundation', function () {
                 return {
