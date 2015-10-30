@@ -3,5 +3,37 @@
         "1.3.2": {
             "path":"jquery.easing.js"
         }
+    },
+
+    "angular-ui-select": {
+        "default": {
+            "name": "angular-ui-select"
+        }
+    },
+
+    "tinynav": {
+        "default": {
+            "name": "tinynav"
+        }
+    },
+
+    "validate": {
+        "0.3.2": {
+            "name": "validate"
+        }
+    },
+
+    "iscroll": {
+        "5.1.1": {
+            "main": "/build/iscroll.js"
+        }
+    },
+
+    "socket.io-client": {
+        "1.3.2": {
+            "main": "socket.io.js"
+        }
     }
+
+
 }

@@ -28,7 +28,7 @@ testUtils = function(options) {
 
                     });
                 });
-            },{path: __dirname + '/../node_modules/phantomjs/bin/'});
+            }, {path: __dirname + '/../node_modules/phantomjs/bin/'});
         }
     };
 };

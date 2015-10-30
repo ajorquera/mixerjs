@@ -1,9 +1,11 @@
 var libraryFallback,
     helpers,
+    url,
     fs;
 
 libraryFallback = require('../libraryFallback.json');
 helpers         = require('./helpers');
+url             = require('url');
 fs              = require('fs-extra');
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -33,10 +35,24 @@ BowerLibrary = function() {
         //convert dependencies from object to array
         if(this.dependencies && Object.keys(this.dependencies).length > 0) {
             this.dependencies = Object.keys(this.dependencies).map(function(key, index) {
-                return {
-                    name: key,
-                    version: args[0].dependencies[key]
+                var dependency,
+                    value;
+
+                value = args[0].dependencies[key];
+
+                dependency = {
+                    name: key
                 };
+
+                if(_isUrl(value)) {
+                    dependency.url = value;
+                    dependency.isBowerLibrary = false;
+                } else {
+                    dependency.version = value;
+                    dependency.isBowerLibrary = true;
+                }
+
+                return dependency;
             });
 
         //some libraries has an empty dependencies object
@@ -55,7 +71,7 @@ BowerLibrary = function() {
  * @returns {string}
  */
 BowerLibrary.prototype.toString = function() {
-    return (this.alias || this.name) + (this.version ? '#' + this.version : '');
+    return this.name + (this.version ? '#' + this.version : '').toLowerCase();
 };
 
 /**
@@ -64,14 +80,19 @@ BowerLibrary.prototype.toString = function() {
  */
 BowerLibrary.prototype.getFilePath = function() {
     var main,
+
         filePath;
 
     if(Array.isArray(this.main)) {
-        this.main.forEach(function(fileName) {
-            if(fileName.indexOf('.js') !== -1) {
+        this.main.forEach(function (fileName) {
+            if (fileName.indexOf('.js') !== -1) {
                 main = fileName;
             }
         });
+
+    }else if(this.isBowerLibrary === false) {
+        main = '/index.js';
+
     } else {
         main = this.main
     }
@@ -81,8 +102,10 @@ BowerLibrary.prototype.getFilePath = function() {
     if (fs.existsSync(filePath) === false) {
         filePath = this.LIB_DIRECTORY + '/' + _getFilePath(this);
 
-        if (filePath === undefined || fs.existsSync(filePath) === false) {
+        if ((filePath === undefined || fs.existsSync(filePath) === false) && !this.main) {
             throw {name: 'INVALID_FILEPATH', params: {name: this.name, version: this.version}}
+        } else {
+            filePath = undefined;
         }
     }
 
@@ -127,6 +150,13 @@ BowerLibrary.prototype.isInstalled = function() {
 BowerLibrary.prototype.LIB_DIRECTORY = './bower_components';
 
 //------------------------------------PRIVATE---------------------------------------------------------------------------
+
+function _isUrl(value) {
+    return (typeof value === 'string') && value.match(_isUrl.URL_REGEX) !== null;
+}
+
+_isUrl.URL_REGEX = /(https|http)?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/i;
+
 
 //get dir bower library
 function _getDir(library) {

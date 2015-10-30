@@ -1,4 +1,5 @@
-var BowerLibrary,
+var libraryFallback,
+    BowerLibrary,
     bowerUtils,
     NodeCache,
     helpers,
@@ -6,12 +7,13 @@ var BowerLibrary,
     fs,
     q;
 
-bower        = require('bower');
-NodeCache    = require('node-cache');
-helpers      = require('./helpers');
-q            = require('q');
-fs           = require('fs-extra');
-BowerLibrary = require('./BowerLibrary');
+bower           = require('bower');
+NodeCache       = require('node-cache');
+helpers         = require('./helpers');
+q               = require('q');
+fs              = require('fs-extra');
+BowerLibrary    = require('./BowerLibrary');
+libraryFallback = require('../libraryFallback.json');
 
 
 //Utility singleton to manage bower libraries.
@@ -29,13 +31,13 @@ bowerUtils   = {
         //one library
         if(library.length === undefined) {
 
-            promise = _fetchLibraryInfo(library.name, library.version);
+            promise = _fetchLibraryInfo(library);
 
         //array libraries
         } else {
             promises = [];
             library.forEach(function(library) {
-                promises.push(_fetchLibraryInfo(library.name, library.version));
+                promises.push(_fetchLibraryInfo(library));
             });
 
             promise = q.all(promises);
@@ -109,7 +111,7 @@ module.exports = bowerUtils;
                                         PRIVATE
 ***********************************************************************************************************************/
 
-//filter installed libraries
+// filter installed libraries and non bower libraries
 function _filterDependencies(dependencies) {
     var filteredDependencies;
 
@@ -135,11 +137,13 @@ function _downloadWithBower(dependencies) {
     }
 
     bowerFormatLibraries = dependencies.map(function(library) {
-        return library.toString();
+        return library.url || library.toString();
     });
 
     //installs library locally
-    bower.commands.install(bowerFormatLibraries).on('end', function (results) {
+    //bower.commands.cache.clean();
+
+    bower.commands.install(bowerFormatLibraries, { forceLatest: true }).on('end', function (results) {
         dependencies.forEach(function(library) {
             library.renameBowerLibrary(library.toString());
         });
@@ -170,12 +174,20 @@ _downloadWithBower.errorHandler = function(deferred, err) {
     deferred.reject(errorObject);
 };
 
-function _fetchLibraryInfo(name, version) {
+function _fetchLibraryInfo(libraryToFetch) {
     var promise,
         deferred,
-        bowerLibraryName;
+        bowerLibraryName,
+        deferredNoBowerLibrary;
 
-    bowerLibraryName = _fetchLibraryInfo.createLibraryIndex(name, version);
+    bowerLibraryName = _fetchLibraryInfo.createLibraryIndex(libraryToFetch.name, libraryToFetch.version);
+
+    if(libraryToFetch.isBowerLibrary === false) {
+        deferredNoBowerLibrary = q.defer();
+        deferredNoBowerLibrary.resolve(new BowerLibrary(libraryToFetch));
+
+        _fetchLibraryInfo.cache.set(bowerLibraryName, deferredNoBowerLibrary.promise);
+    }
 
     promise = _fetchLibraryInfo.cache.get(bowerLibraryName);
 
@@ -189,13 +201,21 @@ function _fetchLibraryInfo(name, version) {
             library = library.latest ? library.latest : library;
 
             //the name of some libraries doesn't match
-            if(library.name !== name) {
-                library.alias = name;
+            if(library.name !== libraryToFetch.name) {
+                library.alias = library.name;
+            }
+
+            var optionsFallback = libraryFallback[libraryToFetch.name] && (libraryFallback[libraryToFetch.name][libraryToFetch.version] || libraryFallback[libraryToFetch.name].default);
+
+            if(optionsFallback) {
+
+                helpers.merge(library, optionsFallback );
+
             }
 
             deferred.resolve(new BowerLibrary(library));
 
-        }).on('error', _fetchLibraryInfo.errorHandler.bind({}, deferred, name));
+        }).on('error', _fetchLibraryInfo.errorHandler.bind({}, deferred, libraryToFetch.name));
 
         promise = deferred.promise;
 

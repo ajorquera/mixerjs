@@ -6,7 +6,7 @@ mixerjs   = require('../mixer.js');
 expect    = require('chai').expect;
 supertest = require('supertest');
 
-describe('mixerjs basic functionality', function() {
+describe('mixerjs error cases', function() {
 
     it('should get error DUPLICATED with /mixer.js?jquery&jquery', function (done) {
         supertest(mixerjs).get('/mixer.js?jquery&jquery').expect(function(res) {
@@ -36,8 +36,21 @@ describe('mixerjs basic functionality', function() {
         }).end(done)
     });
 
-    //TODO need to find a library with an inconsistency
-    xit('should get error INVALID_FILEPATH with /mixer.js?jquery-easing-original', function (done) {
+    it('should get error INVALID_PATH with /filename?jquery', function (done) {
+        supertest(mixerjs).get('/filename?jquery').expect(function(res) {
+            expect(res.status).to.equal(500);
+            expect(res.body.error).to.equal('INVALID_PATH');
+        }).end(done)
+    });
+
+    it('should get error INVALID_PATH with /test.txt?jquery', function (done) {
+        supertest(mixerjs).get('/test.txt?jquery').expect(function(res) {
+            expect(res.status).to.equal(500);
+            expect(res.body.error).to.equal('INVALID_PATH');
+        }).end(done)
+    });
+
+    it('should get error INVALID_FILEPATH with /mixer.js?jquery-easing-original', function (done) {
         supertest(mixerjs).get('/mixer.js?jquery-easing-original').expect(function(res) {
             expect(res.status).to.equal(500);
             expect(res.body.error).to.equal('INVALID_FILEPATH');

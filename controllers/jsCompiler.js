@@ -63,7 +63,7 @@ function _createFile(libraries) {
                 return;
             }
 
-            filesToConcatenate.push(filePath);
+            filePath && filesToConcatenate.push(filePath);
         });
 
         deferred.resolve(shelljs.cat(filesToConcatenate));

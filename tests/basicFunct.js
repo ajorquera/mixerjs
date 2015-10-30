@@ -18,6 +18,15 @@ describe('mixerjs basic functionality', function() {
 
     describe('latest library version ', function() {
 
+        it('should get /mixer.js?bootstrap-timepicker=0.2.6', function (done) {
+            testUtils.createEnv('/mixer.js?bootstrap-timepicker=0.2.6', function () {
+                return window.jQuery;
+            }, function (jQuery) {
+
+                done();
+            });
+        });
+
         it('should get /mixer.js?jquery', function (done) {
             testUtils.createEnv('/mixer.js?jquery', function () {
                 return window.jQuery;
@@ -105,6 +114,16 @@ describe('mixerjs basic functionality', function() {
 
 
     describe('libraries with versions', function() {
+
+        it('should get /mixer.js?angular=1.2.26&angular-strap=2.1.1', function (done) {
+            testUtils.createEnv('/mixer.js?angular=1.2.26&angular-strap=2.1.1', function () {
+                return {};
+
+            }, function () {
+
+                done();
+            });
+        });
 
         it('should get /mixer.js?blast=0.1.0', function (done) {
             testUtils.createEnv('/mixer.js?blast=0.1.0', function () {
@@ -299,4 +318,20 @@ describe('mixerjs basic functionality', function() {
             });
         });
     });
+
+    describe('real use for mixerjs', function() {
+        it('should get 30 different libraries with specific versions', function (done) {
+            testUtils.createEnv('/mixer.js?angular=1.2.26&angular-animate=1.2.26&angular-bootstrap=0.11.0&angular-cookies=1.2.26&angular-elastic=2.4.2&angular-gravatar=0.2.1&angular-input-match&angular-loader=1.2.26&angular-mocks=1.2.26&angular-resource=1.2.26&angular-route=1.2.26&angular-sanitize=1.2.26&angular-strap=2.1.1&angular-ui-select=0.8.3&angular-xeditable=0.1.9&bootstrap-timepicker=0.2.6&cropper=0.7.8&iscroll=5.1.1&angular-libphonenumber=0.0.7&lodash=3.10.1&moment=2.8.3&ng-file-upload=2.2.0&ng-tags-input=2.3.0&pikaday-angular=1.0.3&requirejs=2.1.15&select2=3.4.5&socket.io-client=1.3.2&toastr=2.0.3&validate=0.3.2&vis=3.5.0&jquery=2.1.4', function () {
+                return jQuery;
+
+            }, function (jQuery) {
+
+                //property remove after version 3
+                expect(jQuery.fn.typeahead).to.not.exist;
+
+
+                done();
+            });
+        });
+    })
 });
