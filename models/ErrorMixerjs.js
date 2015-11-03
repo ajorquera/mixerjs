@@ -72,6 +72,12 @@ ErrorMixerjs._errors = {
         msgTemplate    : 'Library "{name}-{version}" has a problem with it\'s file path'
     },
 
+    INVALID_PATH: {
+        name           : 'INVALID_PATH',
+        httpCodeStatus : 500,
+        msgTemplate    : 'The file path is invalid'
+    },
+
     UNKNOWN: {
         name           : 'UNKNOWN',
         httpCodeStatus : 500,

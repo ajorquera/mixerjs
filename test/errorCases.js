@@ -50,8 +50,8 @@ describe('mixerjs error cases', function() {
         }).end(done)
     });
 
-    it('should get error INVALID_FILEPATH with /mixer.js?jquery-easing-original', function (done) {
-        supertest(mixerjs).get('/mixer.js?jquery-easing-original').expect(function(res) {
+    it('should get error INVALID_FILEPATH with /mixer.js?jquery-easing-original=1.3.1', function (done) {
+        supertest(mixerjs).get('/mixer.js?jquery-easing-original=1.3.1').expect(function(res) {
             expect(res.status).to.equal(500);
             expect(res.body.error).to.equal('INVALID_FILEPATH');
         }).end(done)

@@ -8,7 +8,8 @@ helpers         = require('./helpers');
 url             = require('url');
 fs              = require('fs-extra');
 
-//---------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
+
 /**
  * @description Bower library. Describes a full bower library
  * @param {object | string} arguments[0] - Object with properties describing the library or name of the library
@@ -26,39 +27,7 @@ BowerLibrary = function() {
     if(lenArgs === 1) {
         helpers.extend(this, args[0]);
 
-        /*
-         * Some libraries has something like an alias. Where the name of the library is different when you download it
-         * with bower
-         */
-        this.alias   = args[0].alias;
-
-        //convert dependencies from object to array
-        if(this.dependencies && Object.keys(this.dependencies).length > 0) {
-            this.dependencies = Object.keys(this.dependencies).map(function(key, index) {
-                var dependency,
-                    value;
-
-                value = args[0].dependencies[key];
-
-                dependency = {
-                    name: key
-                };
-
-                if(_isUrl(value)) {
-                    dependency.url = value;
-                    dependency.isBowerLibrary = false;
-                } else {
-                    dependency.version = value;
-                    dependency.isBowerLibrary = true;
-                }
-
-                return dependency;
-            });
-
-        //some libraries has an empty dependencies object
-        } else if(helpers.isEmpty(this.dependencies)) {
-            delete this.dependencies;
-        }
+        _handleDependencies.call(this, args);
 
     } else if(lenArgs === 2) {
         this.name    = args[0];
@@ -79,32 +48,16 @@ BowerLibrary.prototype.toString = function() {
  * @returns {string}
  */
 BowerLibrary.prototype.getFilePath = function() {
-    var main,
+    var filePath;
 
-        filePath;
-
-    if(Array.isArray(this.main)) {
-        this.main.forEach(function (fileName) {
-            if (fileName.indexOf('.js') !== -1) {
-                main = fileName;
-            }
-        });
-
-    }else if(this.isBowerLibrary === false) {
-        main = '/index.js';
-
-    } else {
-        main = this.main
-    }
-
-    filePath = this.LIB_DIRECTORY + '/' + this.toString() + '/' + (main ? main.replace('./', '') : this.name + '.js' );
+    filePath = this.LIB_DIRECTORY + '/' + this.toString() + '/' + _getLibraryFile.call(this);
 
     if (fs.existsSync(filePath) === false) {
-        filePath = this.LIB_DIRECTORY + '/' + _getFilePath(this);
+        filePath = this.LIB_DIRECTORY + '/' + _getAlternateFilePath(this);
 
-        if ((filePath === undefined || fs.existsSync(filePath) === false) && !this.main) {
+        if (fs.existsSync(filePath) === false && !this.main) {
             throw {name: 'INVALID_FILEPATH', params: {name: this.name, version: this.version}}
-        } else {
+        } else if(fs.existsSync(filePath) === false) {
             filePath = undefined;
         }
     }
@@ -116,7 +69,7 @@ BowerLibrary.prototype.getFilePath = function() {
  *  @description Gets the directory path of the library
  */
 BowerLibrary.prototype.getDirPath = function() {
-    return this.LIB_DIRECTORY + '/' + _getDir(this);
+    return this.LIB_DIRECTORY + '/' + (this.alias || this.name);
 };
 
 /**
@@ -151,6 +104,62 @@ BowerLibrary.prototype.LIB_DIRECTORY = './bower_components';
 
 //------------------------------------PRIVATE---------------------------------------------------------------------------
 
+function _getLibraryFile() {
+    var mainFile;
+
+    if(Array.isArray(this.main)) {
+        this.main.forEach(function (fileName) {
+            if (fileName.indexOf('.js') !== -1) {
+                mainFile =  fileName.replace('./', '');
+            }
+        });
+
+    //any non bower library is being download to index.js
+    } else if(this.isBowerLibrary === false) {
+        mainFile = '/index.js';
+
+    } else if(this.main) {
+        mainFile = this.main.replace('./', '');
+
+    } else {
+        mainFile = this.name + '.js';
+    }
+
+    return mainFile;
+}
+
+function _handleDependencies(args) {
+
+    //do nothing is there is no dependency
+    if(helpers.isEmpty(this.dependencies)) {
+        delete this.dependencies;
+
+        return;
+    }
+
+    //convert dependencies from object to array
+    this.dependencies = Object.keys(this.dependencies).map(function(key, index) {
+        var dependency,
+            value;
+
+        value = args[0].dependencies[key];
+
+        dependency = {
+            name: key
+        };
+
+        if(_isUrl(value)) {
+            dependency.url = value;
+            dependency.isBowerLibrary = false;
+        } else {
+            dependency.version = value;
+            dependency.isBowerLibrary = true;
+        }
+
+        return dependency;
+    });
+}
+
 function _isUrl(value) {
     return (typeof value === 'string') && value.match(_isUrl.URL_REGEX) !== null;
 }
@@ -158,14 +167,7 @@ function _isUrl(value) {
 _isUrl.URL_REGEX = /(https|http)?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/i;
 
 
-//get dir bower library
-function _getDir(library) {
-    var name = library.alias || library.name;
-
-    return _getFallBackObject(library).directory || name;
-}
-
-function _getFilePath(library) {
+function _getAlternateFilePath(library) {
     return library.toString() + '/' + _getFallBackObject(library).path;
 }
 

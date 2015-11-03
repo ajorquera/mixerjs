@@ -3,7 +3,6 @@ var errorHandler,
 
 ErrorMixerjs = require('../models/ErrorMixerjs.js');
 
-//TODO maybe it would be better to throw the error.
 errorHandler = function(errorObject, req, res, next) {
     var error;
 

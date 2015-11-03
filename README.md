@@ -67,17 +67,17 @@ The basic use will be:
           
       Some libraries doesn't follow the correct pattern when setting up their bower.json, as a consequence mixerjs has 
       problems to find the corresponding library file. `libraryFallback.json` is a json file that solves this issue, 
-      setting the correct path for each library. 
+      setting the correct bower properties for each library. 
       
       ```JSON
       {
           "jquery-easing-original": {
               "default": {
-                  "path":"jquery.easing.js"
+                  "main":"jquery.easing.js"
               },
               
               "1.3.2": {
-                  "path":"jquery.easing.js"
+                  "main":"jquery.easing.js"
               }
           }
       }
@@ -85,10 +85,10 @@ The basic use will be:
      
 * ##Testing
      
-     MixerJS have some test you can run by using [mocha](http://mochajs.org/). To run the tests, go to the terminal 
-     and do:
+     MixerJS have some test you can run by using [mocha](http://mochajs.org/). To run the tests with mocha installed go 
+     to the terminal and do:
      
-     `mocha tests`
+     `mocha`
      
 * ##Demo
      We have set up a small server using the domain name `jort.ch`, so you can check it online. Some uses are:

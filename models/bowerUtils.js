@@ -58,13 +58,11 @@ bowerUtils   = {
 
         this.getAndResolveLibraryDependencies(libraries).then(function(dependencies) {
 
-            _downloadWithBower(_filterDependencies(dependencies))
-                .then(function() {
+            _downloadWithBower(_filterInstalledDependencies(dependencies)).then(function() {
                     deferred.resolve();
-                })
-                .catch(function(response) {
+            }).catch(function(response) {
                     deferred.reject(response);
-                });
+            });
 
         }).catch(function(response) {
             deferred.reject(response);
@@ -83,7 +81,6 @@ bowerUtils   = {
         var deferred;
 
         deferred = q.defer();
-
 
         _getDependencyLevels.call(this, libraries.reverse()).then(function(dependencyLevels) {
 
@@ -111,11 +108,11 @@ module.exports = bowerUtils;
                                         PRIVATE
 ***********************************************************************************************************************/
 
-// filter installed libraries and non bower libraries
-function _filterDependencies(dependencies) {
+function _filterInstalledDependencies(dependencies) {
     var filteredDependencies;
 
     filteredDependencies = [];
+
     dependencies.forEach(function(library) {
         if(library.isInstalled() === false) {
             filteredDependencies.push(library);
@@ -227,7 +224,6 @@ function _fetchLibraryInfo(libraryToFetch) {
 }
 
 _fetchLibraryInfo.cache = new NodeCache({checkPeriod: 86400, useClones: false});
-
 
 _fetchLibraryInfo.createLibraryIndex = function(name, version) {
     return name + (version ? '#' + version : '');

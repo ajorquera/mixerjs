@@ -15,13 +15,14 @@ describe('mixerjs basic functionality', function() {
     });
 
     //TODO be careful with latest version. It may break the test with time
-
     describe('latest library version ', function() {
 
-        it('should get /mixer.js?bootstrap-timepicker=0.2.6', function (done) {
-            testUtils.createEnv('/mixer.js?bootstrap-timepicker=0.2.6', function () {
+        it('should get /mixer.js?bootstrap-timepicker', function (done) {
+            testUtils.createEnv('/mixer.js?bootstrap-timepicker', function () {
                 return window.jQuery;
             }, function (jQuery) {
+                expect(jQuery.fn.jquery).to.equal('2.1.4');
+                expect(jQuery.fn.timepicker).to.exist;
 
                 done();
             });
@@ -105,7 +106,6 @@ describe('mixerjs basic functionality', function() {
                 //property remove after version 3
                 expect(jQuery.fn.typeahead).to.not.exist;
 
-
                 done();
             });
         });
@@ -115,11 +115,12 @@ describe('mixerjs basic functionality', function() {
 
     describe('libraries with versions', function() {
 
-        it('should get /mixer.js?angular=1.2.26&angular-strap=2.1.1', function (done) {
-            testUtils.createEnv('/mixer.js?angular=1.2.26&angular-strap=2.1.1', function () {
-                return {};
+        it('should get /mixer.js?angular-strap=2.1.1', function (done) {
+            testUtils.createEnv('/mixer.js?angular-strap=2.1.1', function () {
+                return angular;
 
-            }, function () {
+            }, function (angular) {
+                expect(angular.version.full).to.equal('1.4.7');
 
                 done();
             });

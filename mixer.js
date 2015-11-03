@@ -13,10 +13,7 @@ app.get('/', function(req, res) {
     res.sendFile(__dirname + '/welcome.json');
 });
 
-app.get('/*.js', function(req, res) {
-    res.contentType('application/json');
-    jsCompiler.apply(app, arguments)
-});
+app.get('/*', jsCompiler);
 
 //error middleware
 app.use(errorHandler);
