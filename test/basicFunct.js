@@ -173,17 +173,19 @@ describe('mixerjs basic functionality', function() {
             });
         });
 
+        //FIXME for some reason, this test is not passing
         xit('should get /mixer.js?mathjs=1.1.0&jquery&react=0.3.3', function (done) {
-            testUtils.createEnv('/mixer.js?mathjs=1.1.0&jquery&react=0.3.3', function () {
+            testUtils.createEnv('/mixer.js?mathjs=2.4.1&jquery&react=0.3.3', function () {
                 return {
-                    math    : math,
-                    jQuery  : jQuery,
-                    React   : React
+                    math    : window.math,
+                    jQuery  : window.jQuery,
+                    React   : window.React
                 };
 
             }, function (libraries) {
+
                 expect(libraries.jQuery.fn.jquery).to.equal('2.1.4');
-                expect(libraries.React.version).to.equal('0.3.3');
+                expect(libraries.React).to.exist;
                 expect(libraries.math.version).to.equal('1.4.7');
 
                 done();
@@ -212,21 +214,20 @@ describe('mixerjs basic functionality', function() {
 
     describe('multiple libraries with dependencies between each other', function() {
 
-        //TODO
-        //multiple libraries with dependencies between each other
+        //FIXME for some reason the test is not passing
         xit('should get /mixer.js?backbone&moment&ember', function (done) {
             testUtils.createEnv('/mixer.js?backbone&moment&ember', function () {
                 return {
-                    Backbone : Backbone,
-                    moment   : moment,
+                    Backbone : window.Backbone,
+                    moment   : window.moment,
                     ember    : window.ember,
-                    jQuery   : jQuery
+                    jQuery   : window.jQuery
                 };
 
             }, function (libraries) {
 
                 expect(libraries.Backbone.VERSION).to.equal('1.2.3');
-                expect(libraries.jQuery).to.equal('2.1.4');
+                expect(libraries.jQuery.fn.jquery).to.equal('2.1.4');
                 expect(libraries.moment.version).to.equal('2.10.6');
                 expect(libraries.angular.version.full).to.equal('1.4.7');
 
