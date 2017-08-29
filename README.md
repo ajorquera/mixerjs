@@ -21,7 +21,7 @@ To run mixerJS, you will need to install nodejs. Go to [their website](https://n
 
 ```
 npm install
-node mixer.js
+npm start
 ```
 
 ## How It Works
@@ -59,7 +59,7 @@ MixerJs will have by default some basic configuration.
  problems to find the corresponding library file. `libraryFallback.json` is a json file that solves this issue,
  setting the correct bower properties for each library.
 
-    ```JSON
+```JSON
 {
     "jquery-easing-original": {
         "default": {
@@ -71,21 +71,21 @@ MixerJs will have by default some basic configuration.
         }
     }
 }
-    ```
+```
 
 ## Testing
 
  MixerJS have some test you can run by using [mocha](http://mochajs.org/). To run the tests with mocha installed go
  to the terminal and do:
 
- `mocha`
+ `npm test`
 
 ## Demo
- We have set up a small server using the domain name `jort.ch`, so you can check it online. Some uses are:
+ We have set up a small server using the domain name `mixerjs.com`, so you can check it online. Some uses are:
 
 **JS**
 
-+ http://jort.ch/mixer.js?jquery
-+ http://jort.ch/mixer.min.js?lodash=2.4.1&jquery
-+ http://jort.ch/compile.js?bootstrap&foundation&angular&angular-ui-router
-+ http://jort.ch/compile.min.js?react=0.14.0&jquery-easing-original
++ http://api.mixerjs.com/file.js?jquery
++ http://api.mixerjs.com/mixer.min.js?lodash=2.4.1&jquery
++ http://api.mixerjs.com/compile.js?bootstrap&foundation&angular&angular-ui-router
++ http://api.mixerjs.com/compile.min.js?react=0.14.0&jquery-easing-original
