@@ -1,6 +1,6 @@
 {
     "name"        : "mixerjs",
-    "version"     : "0.1.0",
+    "version"     : "1.0.0",
     "description" : "Web server that serves multiple JavaScript or CSS libraries in a single http request",
     "main"        : "mixer.js",
     "homepage"    : "https://github.com/ajorquera/mixerjs",
