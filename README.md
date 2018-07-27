@@ -79,13 +79,3 @@ MixerJs will have by default some basic configuration.
  to the terminal and do:
 
  `npm test`
-
-## Demo
- We have set up a small server using the domain name `mixerjs.com`, so you can check it online. Some uses are:
-
-**JS**
-
-+ http://api.mixerjs.com/file.js?jquery
-+ http://api.mixerjs.com/mixer.min.js?lodash=2.4.1&jquery
-+ http://api.mixerjs.com/compile.js?bootstrap&foundation&angular&angular-ui-router
-+ http://api.mixerjs.com/compile.min.js?react=0.14.0&jquery-easing-original
